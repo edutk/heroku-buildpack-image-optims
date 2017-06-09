@@ -28,6 +28,7 @@ if $BUILD_IT; then
   echo "Download sources:"
   wget --progress=bar:force $OPTIPNG_DOWNLOAD_URL
   wget --progress=bar:force $JPEGOPTIM_DOWNLOAD_URL
+  git clone --recursive https://github.com/pornel/pngquant.git
 
   tar zxf "optipng-${OPTIPNG_VER}.tar.gz"
   tar zxf "jpegoptim-${JPEGOPTIM_VER}.tar.gz"
@@ -45,15 +46,24 @@ if $BUILD_IT; then
   ./configure
   make -s
 
+  #back to tmp folder
+  cd ../
+  echo "Make PNGQUANT"
+  cd pngquant
+  ./configure
+  make -s
+
   cd ../../
 
   mkdir -p $VENDOR_DIR/optims/bin
 
   cp $TMP_DIR/optipng-$OPTIPNG_VER/src/optipng/optipng  $VENDOR_DIR/optims/bin/optipng
   cp $TMP_DIR/jpegoptim-$JPEGOPTIM_VER/jpegoptim  $VENDOR_DIR/optims/bin/jpegoptim
+  cp $TMP_DIR/pngquant/pngquant  $VENDOR_DIR/optims/bin/pngquant
 
   chmod +x $VENDOR_DIR/optims/bin/optipng
   chmod +x $VENDOR_DIR/optims/bin/jpegoptim
+  chmod +x $VENDOR_DIR/optims/bin/pngquant
 
   #Cleans tmp files
   rm -R $TMP_DIR
